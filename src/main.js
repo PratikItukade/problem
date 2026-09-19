@@ -29,7 +29,7 @@ function input(value = '') { return `<textarea id="answer" autofocus placeholder
 function renderQuestion() {
   const q = questions[state.step];
   let control = input(state.answers[q.key] || '');
-  if (q.type === 'choice') control = `<div class="choice-grid">${q.choices.map(([title, body], i) => `<button class="choice ${state.answers.cause === i ? 'selected' : ''}" data-choice="${i}"><span class="radio"></span><b>${title}</b><small>${body}</small></button>`).join('')}</div>`;
+  if (q.type === 'choice') control = `<div class="choice-grid">${q.choices.map(([title, body], i) => `<label class="choice ${state.answers.cause === i ? 'selected' : ''}"><input type="radio" name="cause" value="${i}" style="position:absolute;opacity:0" ${state.answers.cause === i ? 'checked' : ''}><span class="radio"></span><b>${title}</b><small>${body}</small></label>`).join('')}</div>`;
   if (q.type === 'options') control = `<div class="option-list">${[0,1,2].map((i) => `<label><span>${String(i+1).padStart(2,'0')}</span><input data-option="${i}" placeholder="A possible next move" value="${escapeHtml(state.answers.options?.[i] || '')}"></label>`).join('')}</div>`;
   if (q.type === 'action') {
     const options = (state.answers.options || []).filter(Boolean);
@@ -45,7 +45,6 @@ function commitCurrent() { const q = questions[state.step]; const text = documen
 document.addEventListener('click', (event) => {
   const target = event.target.closest('button'); if (!target) return;
   if (target.dataset.step !== undefined) { commitCurrent(); state.step = Number(target.dataset.step); render(); return; }
-  if (target.dataset.choice !== undefined) { state.answers.cause = Number(target.dataset.choice); renderQuestion(); return; }
   if (target.dataset.actionChoice !== undefined) { state.answers.action = state.answers.options.filter(Boolean)[Number(target.dataset.actionChoice)]; renderQuestion(); return; }
   if (target.dataset.outcome) { state.answers.outcome = target.dataset.outcome; renderQuestion(); return; }
   const action = target.dataset.action;
@@ -53,6 +52,13 @@ document.addEventListener('click', (event) => {
   if (action === 'back') { commitCurrent(); state.step--; render(); }
   if (action === 'next') { commitCurrent(); state.step++; render(); }
   if (action === 'restart') { state = { step: 0, answers: {} }; save(); render(); }
+});
+document.addEventListener('change', (event) => {
+  if (event.target.matches('input[name="cause"]')) {
+    state.answers.cause = Number(event.target.value);
+    save();
+    renderQuestion();
+  }
 });
 document.querySelector('#newProblem').addEventListener('click', () => { state = { step: 0, answers: {} }; save(); render(); });
 try { const saved = JSON.parse(localStorage.getItem('pathfinder-state')); if (saved) { state = saved; status.textContent = 'Restored your last session'; } } catch { /* start fresh */ }
