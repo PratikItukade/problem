@@ -19,7 +19,7 @@ const app = document.querySelector('#app');
 const nav = document.querySelector('#steps');
 const status = document.querySelector('#saveStatus');
 
-function escapeHtml(value = '') { return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
+function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
 function save() { localStorage.setItem('pathfinder-state', JSON.stringify(state)); status.textContent = 'Saved to this browser'; }
 function renderNav() {
   nav.innerHTML = stages.map((stage, i) => `<button class="step ${i === state.step ? 'active' : ''} ${i < state.step ? 'done' : ''}" ${i > state.step + 1 ? 'disabled' : ''} data-step="${i}"><span class="step-icon">${i < state.step ? '✓' : stage.icon}</span><span><b>${stage.name}</b><small>${stage.hint}</small></span></button>`).join('');
