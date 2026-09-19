@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pathfinder — Solve with a system</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="#"><span class="brand-mark">✦</span> pathfinder</a>
+        <p class="eyebrow">A calmer way forward</p>
+        <nav id="steps" aria-label="Problem-solving progress"></nav>
+        <div class="sidebar-note"><span>◌</span><p>Small, thoughtful steps beat a perfect answer.</p></div>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div><p class="eyebrow">Your problem-solving space</p><p class="save-status" id="saveStatus">Ready when you are</p></div>
+          <button class="ghost-button" id="newProblem">+ New problem</button>
+        </header>
+
+        <div class="content" id="app"></div>
+      </section>
+    </main>
+    <template id="welcome-template">
+      <div class="welcome-card">
+        <span class="sun">✳</span>
+        <p class="eyebrow">No more spinning your wheels</p>
+        <h1>Make space for<br><em>the next right step.</em></h1>
+        <p class="lede">Pathfinder helps you move from a tangled problem to a practical next action — one clear question at a time.</p>
+        <button class="primary-button" data-action="start">Start with a problem <span>→</span></button>
+        <div class="principles"><span>01</span><p>Name what’s happening. Don’t solve the whole thing at once.</p><span>02</span><p>Choose a workable step, then learn from what happens.</p></div>
+      </div>
+    </template>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
