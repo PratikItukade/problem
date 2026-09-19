@@ -21,6 +21,33 @@ const status = document.querySelector('#saveStatus');
 
 function escapeHtml(value = '') { return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char]); }
 function save() { localStorage.setItem('pathfinder-state', JSON.stringify(state)); status.textContent = 'Saved to this browser'; }
+function downloadResponses() {
+  const answers = state.answers;
+  const report = [
+    'PATHFINDER — PROBLEM-SOLVING RECORD',
+    `Downloaded: ${new Date().toLocaleString()}`,
+    '',
+    '1. UNDERSTAND THE PROBLEM',
+    answers.problem || 'No response recorded.',
+    '',
+    '2. CHECK THE CAUSE',
+    answers.cause === 0 ? 'Yes, investigating the cause would help.' : answers.cause === 1 ? 'No, I can move forward with the available information.' : 'No response recorded.',
+    '',
+    '3. POSSIBLE SOLUTIONS',
+    ...(answers.options?.filter(Boolean).map((option, index) => `${index + 1}. ${option}`) || ['No responses recorded.']),
+    '',
+    '4. CHOSEN ACTION',
+    answers.action || 'No action selected.',
+    '',
+    '5. REFLECTION',
+    `Outcome: ${answers.outcome === 'worked' ? 'It helped' : answers.outcome === 'not-yet' ? 'Not yet' : 'No outcome recorded.'}`,
+    answers.reflection || 'No reflection recorded.'
+  ].join('\n');
+  const url = URL.createObjectURL(new Blob([report], { type: 'text/plain;charset=utf-8' }));
+  const link = Object.assign(document.createElement('a'), { href: url, download: 'pathfinder-responses.txt' });
+  link.click();
+  URL.revokeObjectURL(url);
+}
 function renderNav() {
   nav.innerHTML = stages.map((stage, i) => `<button class="step ${i === state.step ? 'active' : ''} ${i < state.step ? 'done' : ''}" ${i > state.step + 1 ? 'disabled' : ''} data-step="${i}"><span class="step-icon">${i < state.step ? '✓' : stage.icon}</span><span><b>${stage.name}</b><small>${stage.hint}</small></span></button>`).join('');
 }
@@ -61,5 +88,6 @@ document.addEventListener('change', (event) => {
   }
 });
 document.querySelector('#newProblem').addEventListener('click', () => { state = { step: 0, answers: {} }; save(); render(); });
+document.querySelector('#downloadResponses').addEventListener('click', downloadResponses);
 try { const saved = JSON.parse(localStorage.getItem('pathfinder-state')); if (saved) { state = saved; status.textContent = 'Restored your last session'; } } catch { /* start fresh */ }
 render();
