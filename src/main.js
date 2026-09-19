@@ -1,5 +1,3 @@
-import './style.css';
-
 const stages = [
   { name: 'Understand', hint: 'Get specific', icon: '⌕' },
   { name: 'Check the cause', hint: 'Only if it helps', icon: '↳' },
